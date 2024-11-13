@@ -34,7 +34,7 @@
             const counter = parseInt(localStorage.getItem('utm_campaign_counter')) || 0;
 
             // Show the pop-up if the counter is greater than 0
-            if (utmCampaignValue && counter > 0) {
+            if (utmCampaignValue && counter > 1) {
                 alert(`Hi ${utmCampaignValue} employee, it’s great to see you again! You’ve been selected for a free beer with us. Just fill in the form, and our team will get back to you.`);
             }
         }
