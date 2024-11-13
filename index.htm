@@ -5,34 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UTM Campaign Popup</title>
     <script>
-        // Function to save 'utm_campaign' from URL to session storage
+        // Function to save 'utm_campaign' from URL to local storage
         function saveUtmCampaign() {
             const urlParams = new URLSearchParams(window.location.search);
-
-            // Check if 'utm_campaign' parameter exists
+            
+            // Check if 'utm_campaign' parameter exists in the URL
             if (urlParams.has('utm_campaign')) {
                 const utmCampaignValue = urlParams.get('utm_campaign');
+                
+                // Check if the campaign is already saved in localStorage
+                let storedCampaign = localStorage.getItem('utm_campaign');
+                let counter = parseInt(localStorage.getItem('utm_campaign_counter')) || 0;
 
-                // Save 'utm_campaign' value to session storage
-                sessionStorage.setItem('utm_campaign', utmCampaignValue);
-                console.log('UTM Campaign saved to session storage:', utmCampaignValue);
+                // If the stored campaign is different or doesn't exist, reset counter
+                if (storedCampaign !== utmCampaignValue) {
+                    localStorage.setItem('utm_campaign', utmCampaignValue);
+                    localStorage.setItem('utm_campaign_counter', 0);  // Set counter to 0 for new campaign
+                    console.log('New UTM Campaign saved:', utmCampaignValue);
+                } else {
+                    // If the same campaign exists, increment the counter
+                    localStorage.setItem('utm_campaign_counter', counter + 1);
+                    console.log('UTM Campaign counter incremented:', counter + 1);
+                }
             }
         }
 
-        // Function to check session storage and show pop-up if 'utm_campaign' is set
+        // Function to check local storage and show the pop-up if the counter is above 0
         function showPopupIfCampaignExists() {
-            const utmCampaignValue = sessionStorage.getItem('utm_campaign');
+            const utmCampaignValue = localStorage.getItem('utm_campaign');
+            const counter = parseInt(localStorage.getItem('utm_campaign_counter')) || 0;
 
-            // If a 'utm_campaign' value exists in session storage, show the pop-up
-            if (utmCampaignValue) {
-                alert(`Hi ${utmCampaignValue} employee, it’s great to see you here! You’re selected for a free beer with us. Just fill in the form, and our team will get back to you.`);
+            // Show the pop-up only if the counter is greater than 0
+            if (utmCampaignValue && counter > 0) {
+                alert(`Hi ${utmCampaignValue} employee, it’s great to see you again! You’ve been selected for a free beer with us. Just fill in the form, and our team will get back to you.`);
             }
         }
 
         // Run functions on page load
         document.addEventListener("DOMContentLoaded", function() {
-            saveUtmCampaign();
-            showPopupIfCampaignExists();
+            saveUtmCampaign();  // Check and save UTM campaign and counter
+            showPopupIfCampaignExists();  // Show the popup if conditions are met
         });
     </script>
 </head>
@@ -53,4 +65,3 @@
     </form>
 </body>
 </html>
-inde
